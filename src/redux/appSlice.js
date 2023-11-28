@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createTodo, getTodos, toggleDone } from "./appThunk";
+import { createTodo, getTodos, toggleDone, updateTodo } from "./appThunk";
 //전역적인 데이터 관리하기 위한 Slice 생성,
 const appSlice = createSlice({
   name: "appSlice", // 객체를 만든 후, 초기값을 설정,
@@ -13,6 +13,7 @@ const appSlice = createSlice({
       state.newTodo = action.payload;
     }
   },
+
   extraReducers: (builder) => {
     builder.addCase(getTodos.pending, (state) => {
       state.isLoading = true;
@@ -48,6 +49,22 @@ const appSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(toggleDone.rejected, (state) => {
+      state.isLoading = false;
+    });
+    builder.addCase(updateTodo.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(updateTodo.fulfilled, (state, action) => {
+      state.todos = state.todos.map((v) => {
+        if (v.id === action.payload.id) {
+          return action.payload;
+        } else {
+          return v;
+        }
+      });
+      state.isLoading = false;
+    });
+    builder.addCase(updateTodo.rejected, (state) => {
       state.isLoading = false;
     });
   }
