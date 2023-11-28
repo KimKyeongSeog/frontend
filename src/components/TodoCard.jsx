@@ -1,7 +1,7 @@
 import { MdModeEditOutline } from "react-icons/md";
 import { ImBin } from "react-icons/im";
 import { useDispatch } from "react-redux";
-import { toggleDone, updateTodo } from "../redux/appThunk";
+import { deleteTodo, toggleDone, updateTodo } from "../redux/appThunk";
 import { useState } from "react";
 import { HiMiniXMark } from "react-icons/hi2";
 
@@ -28,6 +28,10 @@ const TodoCard = ({ id, title, isDone }) => {
     dispatch(updateTodo({ todoId: id, title: newTodo }));
     setNewTodo(newTodo);
     setUpdateToggle(false);
+  };
+
+  const onClickDelete = () => {
+    dispatch(deleteTodo({ todoId: id }));
   };
 
   return (
@@ -69,7 +73,10 @@ const TodoCard = ({ id, title, isDone }) => {
           <MdModeEditOutline />
         )}
       </button>
-      <button className="w-2/12 text-2xl hover:text-gray-500 active:text-black">
+      <button
+        className="w-2/12 text-2xl hover:text-gray-500 active:text-black"
+        onClick={onClickDelete}
+      >
         <ImBin />
       </button>
     </li>

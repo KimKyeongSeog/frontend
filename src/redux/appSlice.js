@@ -1,5 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createTodo, getTodos, toggleDone, updateTodo } from "./appThunk";
+import {
+  createTodo,
+  getTodos,
+  toggleDone,
+  updateTodo,
+  deleteTodo
+} from "./appThunk";
 //전역적인 데이터 관리하기 위한 Slice 생성,
 const appSlice = createSlice({
   name: "appSlice", // 객체를 만든 후, 초기값을 설정,
@@ -65,6 +71,22 @@ const appSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(updateTodo.rejected, (state) => {
+      state.isLoading = false;
+    });
+    builder.addCase(deleteTodo.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(deleteTodo.fulfilled, (state, action) => {
+      state.todos = state.todos.filter((v) => {
+        if (v.id !== action.payload) {
+          return v;
+        }
+        //MAP VS FILTER FUNCTION! : map함수는 출력된 모든값을 출력한다 (값이 없을 떄 undefined로 출력!) 그러므로 filter 함수로 사용해야한다.
+      });
+      state.isLoading = false;
+    });
+
+    builder.addCase(deleteTodo.rejected, (state) => {
       state.isLoading = false;
     });
   }
